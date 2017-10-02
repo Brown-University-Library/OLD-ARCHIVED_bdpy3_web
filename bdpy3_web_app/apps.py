@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 
 class AppXConfig(AppConfig):
-    name = 'app_x'
+    name = 'bdpy3_web_app'

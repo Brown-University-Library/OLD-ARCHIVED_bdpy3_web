@@ -2,7 +2,7 @@
 
 from django.conf.urls import include, url
 from django.views.generic import RedirectView
-from app_x import views
+from bdpy3_web_app import views
 
 urlpatterns = [
 
