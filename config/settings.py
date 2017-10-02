@@ -57,22 +57,22 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-template_dirs = json.loads( os.environ['BDPY3WEB__TEMPLATES_JSON'] )
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': template_dirs,
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+# template_dirs = json.loads( os.environ['BDPY3WEB__TEMPLATES_JSON'] )
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': template_dirs,
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
 
 WSGI_APPLICATION = 'config.passenger_wsgi.application'
 
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'config.passenger_wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = json.loads( os.environ['BDPY3WEB__DATABASES_JSON'] )
+# DATABASES = json.loads( os.environ['BDPY3WEB__DATABASES_JSON'] )
 
 
 # Password validation
@@ -119,8 +119,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = os.environ['BDPY3WEB__STATIC_URL']
-STATIC_ROOT = os.environ['BDPY3WEB__STATIC_ROOT']  # needed for collectstatic command
+# STATIC_URL = os.environ['BDPY3WEB__STATIC_URL']
+# STATIC_ROOT = os.environ['BDPY3WEB__STATIC_ROOT']  # needed for collectstatic command
 
 
 # Email
