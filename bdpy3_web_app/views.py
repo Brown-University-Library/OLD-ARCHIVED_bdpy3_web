@@ -16,6 +16,11 @@ def info( request ):
     return HttpResponseRedirect( settings_app.README_URL )
 
 
+def v1( request ):
+    """ Handles post from easyborrow & returns json results. """
+    return HttpResponse( 'v1 handling coming' )
+
+
 def access_test( request ):
     """ Returns simplest response. """
     now = datetime.datetime.now()

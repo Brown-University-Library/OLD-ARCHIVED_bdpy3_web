@@ -15,6 +15,8 @@ urlpatterns = [
 
     url( r'^info/$', views.info, name='info_url' ),
 
+    url( r'^v1/$', views.v1, name='v1_url' ),
+
     url( r'^access_test/$', views.access_test, name='access_test_url' ),
 
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),
