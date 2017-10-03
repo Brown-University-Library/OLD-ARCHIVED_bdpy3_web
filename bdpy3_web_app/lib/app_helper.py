@@ -58,8 +58,8 @@ class Validator( object ):
         """ Checks auth params; returns boolean.
             Called by validate_request() """
         validity = False
-        if params.get( 'api_authorization_code', 'nope' ) == settings_app.API_AUTHORIZATION_CODE:
-            if params.get( 'api_identity', 'nope' ) == settings_app.API_IDENTITY:
+        if params.get( 'api_authorization_code', 'nope' ) == settings_app.WEB_API_AUTHORIZATION_CODE:
+            if params.get( 'api_identity', 'nope' ) == settings_app.WEB_API_IDENTITY:
                 validity = True
         log.debug( 'validity, `%s`' % validity )
         return validity
@@ -72,19 +72,24 @@ class LibCaller( object ):
     """ Contains functions for bdpy3 call. """
 
     def __init__( self ):
-        pass
+        self.defaults = {
+            'API_URL_ROOT': settings_app.BDPY3_API_URL_ROOT,
+            'API_KEY': settings_app.BDPY3_API_KEY,
+            'UNIVERSITY_CODE': settings_app.BDPY3_UNIVERSITY_CODE,
+            'PARTNERSHIP_ID': settings_app.BDPY3_PARTNERSHIP_ID,
+            'PICKUP_LOCATION': settings_app.BDPY3_PICKUP_LOCATION,
+            }
 
     def do_lookup( self, params ):
         """ Runs lookup; returns bdpy3 output.
             Called by bdpyweb_app.handle_v1() """
-        self.logger.debug( 'params, `%s`' % pprint.pformat(params) )
-        defaults = self.load_bdpy_defaults()
-        bd = BorrowDirect( defaults, self.logger )
+        log.debug( 'params, ```%s```' % pprint.pformat(params) )
+        bd = BorrowDirect( self.defaults )
         # bd.run_request_item( params['user_barcode'], 'ISBN', params['isbn'] )
         # self.logger.debug( 'bd.request_result, `%s`' % bd.request_result )
         # return bd.request_result
-        bd.run_search_item( params['user_barcode'], 'ISBN', params['isbn'] )
-        self.logger.debug( 'bd.search_result, `%s`' % bd.request_result )
+        bd.run_search( params['user_barcode'], 'ISBN', params['isbn'] )
+        log.debug( 'bd.search_result, `%s`' % bd.search_result )
         return bd.search_result
 
     def interpret_result( self, bdpy_result ):

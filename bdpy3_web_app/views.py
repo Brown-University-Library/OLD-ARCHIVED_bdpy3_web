@@ -2,7 +2,7 @@
 
 import datetime, json, logging, os, pprint
 from bdpy3_web_app import settings_app
-from bdpy3_web_app.lib.app_helper import Validator
+from bdpy3_web_app.lib.app_helper import Validator, LibCaller
 from django.conf import settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404, render
 
 log = logging.getLogger(__name__)
 validator = Validator()
+caller = LibCaller()
 
 
 def info( request ):
@@ -26,8 +27,8 @@ def v1( request ):
     if validator.validate_request( request.method, request.META.get('REMOTE_ADDR', ''), request.GET ) is False:  # for dev; will be POST
         log.info( 'request invalid, returning 400' )
         return HttpResponseBadRequest( '400 / Bad Request' )
-    result_data = ezb_helper.do_lookup( flask.request.form )
-    interpreted_response_dct = ezb_helper.interpret_result( result_data )
+    result_data = caller.do_lookup( request.GET )  # for dev; will be POST
+    interpreted_response_dct = caller.interpret_result( result_data )
     logger.debug( 'returning response' )
     return flask.jsonify( interpreted_response_dct )
 
