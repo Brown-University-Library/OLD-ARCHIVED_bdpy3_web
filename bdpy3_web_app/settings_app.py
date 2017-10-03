@@ -3,6 +3,4 @@
 import os
 
 
-FOO = 'BAR'
-
-FOO2 = os.environ['FOO2']
+README_URL = os.environ['BDPY3WEB__README_URL']
