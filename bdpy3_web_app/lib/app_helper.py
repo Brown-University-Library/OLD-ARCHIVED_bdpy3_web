@@ -9,14 +9,14 @@ from bdpy3_web_app import settings_app
 log = logging.getLogger(__name__)
 
 
-class EzbHelper( object ):
-    """ Helper functions for views.v1() """
+class Validator( object ):
+    """ Contains validation functions for views.v1() """
 
     def __init__( self ):
         log.debug( 'helper initialized' )
         pass
 
-    def validate_request( self, method, ip, basic_auth_string, post_params ):
+    def validate_request( self, method, ip, post_params ):
         """ Checks request validity; returns boolean.
             Called by bdpyweb_app.handle_v1() """
         log.debug( 'method, `%s`' % method )
@@ -24,49 +24,10 @@ class EzbHelper( object ):
         if method == 'GET':  # for dev; will be POST
             if self.check_keys( post_params ) is True:
                 if self.check_ip( ip ) is True:
-                    if self.check_auth( basic_auth_string ) is True:
+                    if self.check_auth( post_params ) is True:
                         validity = True
         log.debug( 'overall_validity, `%s`' % validity )
         return validity
-
-    def do_lookup( self, params ):
-        """ Runs lookup; returns bdpy output.
-            Called by bdpyweb_app.handle_v1() """
-        self.logger.debug( 'params, `%s`' % pprint.pformat(params) )
-        defaults = self.load_bdpy_defaults()
-        bd = BorrowDirect( defaults, self.logger )
-        bd.run_request_item( params['user_barcode'], 'ISBN', params['isbn'] )
-        self.logger.debug( 'bd.request_result, `%s`' % bd.request_result )
-        return bd.request_result
-
-    def interpret_result( self, bdpy_result ):
-        """ Examines api result and prepares response expected by easyborrow controller.
-            Called by bdpyweb_app.handle_v1()
-            Note: at the moment, it does not appear that the new BD api distinguishes between 'found' and 'requestable'. """
-        return_dct = {
-            'search_result': 'FAILURE', 'bd_confirmation_code': None, 'found': False, 'requestable': False }
-        if 'RequestNumber' in bdpy_result.keys():
-            return_dct['search_result'] = 'SUCCESS'
-            return_dct['bd_confirmation_code'] = bdpy_result['RequestNumber']
-            return_dct['found'] = True
-            return_dct['requestable'] = True
-        self.logger.debug( 'interpreted result-dct, `%s`' % pprint.pformat(return_dct) )
-        return return_dct
-
-    ## helper functions (called by above functions)
-
-    def load_bdpy_defaults( self ):
-        """ Loads up non-changing bdpy defaults.
-            Called by do_lookup() """
-        defaults = {
-            'API_URL_ROOT': unicode( os.environ['bdpyweb__BDPY_API_ROOT_URL'] ),
-            'API_KEY': unicode( os.environ['bdpyweb__BDPY_API_KEY'] ),
-            'UNIVERSITY_CODE': unicode( os.environ['bdpyweb__BDPY_UNIVERSITY_CODE'] ),
-            'PARTNERSHIP_ID': unicode( os.environ['bdpyweb__BDPY_PARTNERSHIP_ID'] ),
-            'PICKUP_LOCATION': unicode( os.environ['bdpyweb__BDPY_PICKUP_LOCATION'] ),
-            }
-        self.logger.debug( 'defaults, `%s`' % defaults )
-        return defaults
 
     def check_keys( self, params ):
         """ Checks required keys; returns boolean.
@@ -103,11 +64,158 @@ class EzbHelper( object ):
         log.debug( 'validity, `%s`' % validity )
         return validity
 
-    # end class EzbHelper
+    ## end class Validator()
+
+
+
+class LibCaller( object ):
+    """ Contains functions for bdpy3 call. """
+
+    def __init__( self ):
+        pass
+
+    def do_lookup( self, params ):
+        """ Runs lookup; returns bdpy3 output.
+            Called by bdpyweb_app.handle_v1() """
+        self.logger.debug( 'params, `%s`' % pprint.pformat(params) )
+        defaults = self.load_bdpy_defaults()
+        bd = BorrowDirect( defaults, self.logger )
+        # bd.run_request_item( params['user_barcode'], 'ISBN', params['isbn'] )
+        # self.logger.debug( 'bd.request_result, `%s`' % bd.request_result )
+        # return bd.request_result
+        bd.run_search_item( params['user_barcode'], 'ISBN', params['isbn'] )
+        self.logger.debug( 'bd.search_result, `%s`' % bd.request_result )
+        return bd.search_result
+
+    def interpret_result( self, bdpy_result ):
+        """ Examines api result and prepares response expected by easyborrow controller.
+            Called by bdpyweb_app.handle_v1()
+            Note: at the moment, it does not appear that the new BD api distinguishes between 'found' and 'requestable'. """
+        return_dct = {
+            'search_result': 'FAILURE', 'bd_confirmation_code': None, 'found': False, 'requestable': False }
+        if 'RequestNumber' in bdpy_result.keys():
+            return_dct['search_result'] = 'SUCCESS'
+            return_dct['bd_confirmation_code'] = bdpy_result['RequestNumber']
+            return_dct['found'] = True
+            return_dct['requestable'] = True
+        self.logger.debug( 'interpreted result-dct, `%s`' % pprint.pformat(return_dct) )
+        return return_dct
+
+    def load_bdpy_defaults( self ):
+        """ Loads up non-changing bdpy defaults.
+            Called by do_lookup() """
+        defaults = {
+            'API_URL_ROOT': unicode( os.environ['bdpyweb__BDPY_API_ROOT_URL'] ),
+            'API_KEY': unicode( os.environ['bdpyweb__BDPY_API_KEY'] ),
+            'UNIVERSITY_CODE': unicode( os.environ['bdpyweb__BDPY_UNIVERSITY_CODE'] ),
+            'PARTNERSHIP_ID': unicode( os.environ['bdpyweb__BDPY_PARTNERSHIP_ID'] ),
+            'PICKUP_LOCATION': unicode( os.environ['bdpyweb__BDPY_PICKUP_LOCATION'] ),
+            }
+        self.logger.debug( 'defaults, `%s`' % defaults )
+        return defaults
+
+    ## end class LibCaller()
+
+
+# class EzbHelper( object ):
+#     """ Helper functions for views.v1() """
+
+#     def __init__( self ):
+#         log.debug( 'helper initialized' )
+#         pass
+
+#     def validate_request( self, method, ip, post_params ):
+#         """ Checks request validity; returns boolean.
+#             Called by bdpyweb_app.handle_v1() """
+#         log.debug( 'method, `%s`' % method )
+#         validity = False
+#         if method == 'GET':  # for dev; will be POST
+#             if self.check_keys( post_params ) is True:
+#                 if self.check_ip( ip ) is True:
+#                     if self.check_auth( post_params ) is True:
+#                         validity = True
+#         log.debug( 'overall_validity, `%s`' % validity )
+#         return validity
+
+#     def do_lookup( self, params ):
+#         """ Runs lookup; returns bdpy output.
+#             Called by bdpyweb_app.handle_v1() """
+#         self.logger.debug( 'params, `%s`' % pprint.pformat(params) )
+#         defaults = self.load_bdpy_defaults()
+#         bd = BorrowDirect( defaults, self.logger )
+#         bd.run_request_item( params['user_barcode'], 'ISBN', params['isbn'] )
+#         self.logger.debug( 'bd.request_result, `%s`' % bd.request_result )
+#         return bd.request_result
+
+#     def interpret_result( self, bdpy_result ):
+#         """ Examines api result and prepares response expected by easyborrow controller.
+#             Called by bdpyweb_app.handle_v1()
+#             Note: at the moment, it does not appear that the new BD api distinguishes between 'found' and 'requestable'. """
+#         return_dct = {
+#             'search_result': 'FAILURE', 'bd_confirmation_code': None, 'found': False, 'requestable': False }
+#         if 'RequestNumber' in bdpy_result.keys():
+#             return_dct['search_result'] = 'SUCCESS'
+#             return_dct['bd_confirmation_code'] = bdpy_result['RequestNumber']
+#             return_dct['found'] = True
+#             return_dct['requestable'] = True
+#         self.logger.debug( 'interpreted result-dct, `%s`' % pprint.pformat(return_dct) )
+#         return return_dct
+
+#     ## helper functions (called by above functions)
+
+#     def load_bdpy_defaults( self ):
+#         """ Loads up non-changing bdpy defaults.
+#             Called by do_lookup() """
+#         defaults = {
+#             'API_URL_ROOT': unicode( os.environ['bdpyweb__BDPY_API_ROOT_URL'] ),
+#             'API_KEY': unicode( os.environ['bdpyweb__BDPY_API_KEY'] ),
+#             'UNIVERSITY_CODE': unicode( os.environ['bdpyweb__BDPY_UNIVERSITY_CODE'] ),
+#             'PARTNERSHIP_ID': unicode( os.environ['bdpyweb__BDPY_PARTNERSHIP_ID'] ),
+#             'PICKUP_LOCATION': unicode( os.environ['bdpyweb__BDPY_PICKUP_LOCATION'] ),
+#             }
+#         self.logger.debug( 'defaults, `%s`' % defaults )
+#         return defaults
+
+#     def check_keys( self, params ):
+#         """ Checks required keys; returns boolean.
+#             Called by validate_request() """
+#         log.debug( 'params, ```%s```' % pprint.pformat(params) )
+#         keys_good = False
+#         required_keys = [ 'api_authorization_code', 'api_identity', 'isbn',  'user_barcode' ]
+#         for required_key in required_keys:
+#             if required_key not in params.keys():
+#                 break
+#             if required_key == required_keys[-1]:
+#                 keys_good = True
+#         log.debug( 'keys_good, `%s`' % keys_good )
+#         return keys_good
+
+#     def check_ip( self, ip ):
+#         """ Checks ip; returns boolean.
+#             Called by validate_request() """
+#         validity = False
+#         if ip in settings_app.LEGIT_IPS:
+#             validity = True
+#         else:
+#             log.debug( 'bad ip, `%s`' % ip )
+#         log.debug( 'validity, `%s`' % validity )
+#         return validity
+
+#     def check_auth( self, params ):
+#         """ Checks auth params; returns boolean.
+#             Called by validate_request() """
+#         validity = False
+#         if params.get( 'api_authorization_code', 'nope' ) == settings_app.API_AUTHORIZATION_CODE:
+#             if params.get( 'api_identity', 'nope' ) == settings_app.API_IDENTITY:
+#                 validity = True
+#         log.debug( 'validity, `%s`' % validity )
+#         return validity
+
+#     # end class EzbHelper
 
 
 class FormHelper( object ):
-    """ Helper functions. """
+    """ Not currently in-use. """
 
     def __init__( self, logger ):
         """ Helper functions for app->handle_form() """

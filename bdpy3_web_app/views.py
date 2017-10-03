@@ -2,7 +2,7 @@
 
 import datetime, json, logging, os, pprint
 from bdpy3_web_app import settings_app
-from bdpy3_web_app.lib.app_helper import EzbHelper
+from bdpy3_web_app.lib.app_helper import Validator
 from django.conf import settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, render
 
 
 log = logging.getLogger(__name__)
-ezb_helper = EzbHelper()
+validator = Validator()
 
 
 def info( request ):
@@ -23,7 +23,7 @@ def v1( request ):
     """ Handles post from easyborrow & returns json results. """
     # log.debug( 'request, ```%s```' % pprint.pformat(request.__dict__) )
     log.debug( '\n\nstarting request...' )
-    if ezb_helper.validate_request( request.method, request.META.get('REMOTE_ADDR', ''), request.META.get('HTTP_AUTHORIZATION', ''), request.GET ) is False:  # for dev; will be POST
+    if validator.validate_request( request.method, request.META.get('REMOTE_ADDR', ''), request.GET ) is False:  # for dev; will be POST
         log.info( 'request invalid, returning 400' )
         return HttpResponseBadRequest( '400 / Bad Request' )
     result_data = ezb_helper.do_lookup( flask.request.form )
