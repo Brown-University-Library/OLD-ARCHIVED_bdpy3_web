@@ -1,14 +1,28 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from django.test import TestCase
+from django.test import SimpleTestCase    ## TestCase requires db
+from bdpy3_web_app import settings_app
+from bdpy3_web_app.lib.app_helper import LibCaller
 
 
 log = logging.getLogger(__name__)
-TestCase.maxDiff = None
+SimpleTestCase.maxDiff = None
 
 
-class RootUrlTest( TestCase ):
+class Bdpy3LibTest( SimpleTestCase ):
+    """ Checks call to bdpy3 library. """
+
+    def setUp(self):
+        self.libcaller = LibCaller()
+
+    def test_do_lookup( self):
+        """ Checks good params. """
+        params = { 'user_barcode': settings_app.TEST_PATRON_BARCODE, 'isbn': settings_app.TEST_ISBN }
+        self.assertEqual( 'foo', self.libcaller.do_lookup(params) )
+
+
+class RootUrlTest( SimpleTestCase ):
     """ Checks root urls. """
 
     def test_root_url_no_slash(self):

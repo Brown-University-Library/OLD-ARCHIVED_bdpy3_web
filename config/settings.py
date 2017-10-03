@@ -169,6 +169,7 @@ LOGGING = {
         'bdpy3_web_app': {
             'handlers': ['logfile'],
             'level': os.environ.get(u'BDPY3WEB__LOG_LEVEL'),
+            'propagate': True
         },
     }
 }
