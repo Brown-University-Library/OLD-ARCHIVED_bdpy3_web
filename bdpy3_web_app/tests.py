@@ -19,7 +19,19 @@ class Bdpy3LibTest( SimpleTestCase ):
     def test_do_lookup( self):
         """ Checks good params. """
         params = { 'user_barcode': settings_app.TEST_PATRON_BARCODE, 'isbn': settings_app.TEST_ISBN }
-        self.assertEqual( 'foo', self.libcaller.do_lookup(params) )
+        result = self.libcaller.do_lookup( params )
+        self.assertEqual(
+            dict,
+            type(result) )
+        self.assertEqual(
+            ['Available', 'OrigNumberOfRecords', 'PickupLocation', 'RequestLink'],
+            sorted(result.keys()) )
+        self.assertEqual(
+            'foo',
+            result['Available'] )
+        self.assertEqual(
+            'foo',
+            result['RequestLink']['RequestMessage'] )
 
 
 class RootUrlTest( SimpleTestCase ):

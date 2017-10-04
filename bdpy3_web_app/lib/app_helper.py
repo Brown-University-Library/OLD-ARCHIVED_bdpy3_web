@@ -84,6 +84,7 @@ class LibCaller( object ):
         """ Runs lookup; returns bdpy3 output.
             Called by bdpyweb_app.handle_v1() """
         log.debug( 'params, ```%s```' % pprint.pformat(params) )
+        log.debug( 'self.defaults, ```%s```' % pprint.pformat(self.defaults) )
         bd = BorrowDirect( self.defaults )
         # bd.run_request_item( params['user_barcode'], 'ISBN', params['isbn'] )
         # self.logger.debug( 'bd.request_result, `%s`' % bd.request_result )
