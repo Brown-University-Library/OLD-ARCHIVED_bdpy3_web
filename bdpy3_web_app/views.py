@@ -24,10 +24,10 @@ def v1( request ):
     """ Handles post from easyborrow & returns json results. """
     # log.debug( 'request, ```%s```' % pprint.pformat(request.__dict__) )
     log.debug( '\n\nstarting request...' )
-    if validator.validate_request( request.method, request.META.get('REMOTE_ADDR', ''), request.GET ) is False:  # for dev; will be POST
+    if validator.validate_request( request.method, request.META.get('REMOTE_ADDR', ''), request.POST ) is False:
         log.info( 'request invalid, returning 400' )
         return HttpResponseBadRequest( '400 / Bad Request' )
-    result_data = caller.do_lookup( request.GET )  # for dev; will be POST
+    result_data = caller.do_lookup( request.POST )
     interpreted_response_dct = caller.interpret_result( result_data )
     logger.debug( 'returning response' )
     return flask.jsonify( interpreted_response_dct )
