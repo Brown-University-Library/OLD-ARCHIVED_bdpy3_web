@@ -171,3 +171,4 @@ LOGGING = {
     }
 }
 
+CSRF_TRUSTED_ORIGINS = json.loads( os.environ['BDPY3WEB__CSRF_TRUSTED_ORIGINS_JSON'] )
