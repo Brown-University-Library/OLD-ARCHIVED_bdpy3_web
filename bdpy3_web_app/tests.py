@@ -10,28 +10,29 @@ log = logging.getLogger(__name__)
 SimpleTestCase.maxDiff = None
 
 
-class Bdpy3LibTest( SimpleTestCase ):
-    """ Checks call to bdpy3 library. """
+## disables test because it would really submit a request
+# class Bdpy3LibTest( SimpleTestCase ):
+#     """ Checks call to bdpy3 library. """
 
-    def setUp(self):
-        self.libcaller = LibCaller()
+#     def setUp(self):
+#         self.libcaller = LibCaller()
 
-    def test_do_lookup( self):
-        """ Checks good params. """
-        params = { 'user_barcode': settings_app.TEST_PATRON_BARCODE, 'isbn': settings_app.TEST_ISBN }
-        result = self.libcaller.do_lookup( params )
-        self.assertEqual(
-            dict,
-            type(result) )
-        self.assertEqual(
-            ['Available', 'OrigNumberOfRecords', 'PickupLocation', 'RequestLink'],
-            sorted(result.keys()) )
-        self.assertEqual(
-            'foo',
-            result['Available'] )
-        self.assertEqual(
-            'foo',
-            result['RequestLink']['RequestMessage'] )
+#     def test_do_lookup( self):
+#         """ Checks good params. """
+#         params = { 'user_barcode': settings_app.TEST_PATRON_BARCODE, 'isbn': settings_app.TEST_ISBN }
+#         result = self.libcaller.do_lookup( params )
+#         self.assertEqual(
+#             dict,
+#             type(result) )
+#         self.assertEqual(
+#             ['Available', 'OrigNumberOfRecords', 'PickupLocation', 'RequestLink'],
+#             sorted(result.keys()) )
+#         self.assertEqual(
+#             'foo',
+#             result['Available'] )
+#         self.assertEqual(
+#             'foo',
+#             result['RequestLink']['RequestMessage'] )
 
 
 class RootUrlTest( SimpleTestCase ):
