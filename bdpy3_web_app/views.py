@@ -29,10 +29,9 @@ def v1( request ):
         return HttpResponseBadRequest( '400 / Bad Request' )
     result_data = caller.do_lookup( request.POST )
     interpreted_response_dct = caller.interpret_result( result_data )
-    logger.debug( 'returning response' )
-    return flask.jsonify( interpreted_response_dct )
-
-    return HttpResponse( 'v1 handling coming' )
+    log.debug( 'returning response' )
+    jsn = json.dumps( interpreted_response_dct, sort_keys=True, indent=2 )
+    return HttpResponse( jsn, content_type='application/javascript; charset=utf-8' )
 
 
 def access_test( request ):
