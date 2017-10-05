@@ -21,9 +21,9 @@ sample script...
 
 
     ## settings
-    URL = os.environ['bdpyweb_flask_api_url']
-    API_IDENTITY = os.environ['bdpyweb_flask_api_identity']
-    API_KEY = os.environ['bdpyweb_flask_api_auth_key']
+    URL = os.environ['url_to_this_app']
+    API_IDENTITY = os.environ['expected_identity']
+    API_KEY = os.environ['expected_key']
 
     params = {
         'api_identity': API_IDENTITY,
@@ -32,7 +32,7 @@ sample script...
         'isbn': 'the_isbn'
         }
     r = requests.post( URL, data=params )
-    print r.content
+    print r.content.decode( 'utf-8' )
 
     # on success, the json response...
     # {
