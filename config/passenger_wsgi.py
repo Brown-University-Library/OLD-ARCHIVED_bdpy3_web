@@ -16,7 +16,7 @@ Note: no need to activate the virtual-environment here for passenger.
 - passenger env-vars loading under python3.x is enabled via the `SenEnv` entry in the project's httpd/passenger.conf section.
   - usage: `SetEnv BDPY3WEB__SETTINGS_PATH /path/to/BDPY3WEB__env_settings.sh`
   - `SenEnv` requires apache env_module; info: <https://www.phusionpassenger.com/library/indepth/environment_variables.html>,
-     enabled by default on macOS 10.12.4, and our dev and production servers.
+     enabled by default on macOS 10.12.x, and our dev and production servers.
 
 For activating the virtual-environment manually, don't source the settings file directly. Instead, add to `project_env/bin/activate`:
   export BDPY3WEB__SETTINGS_PATH="/path/to/BDPY3WEB__env_settings.sh"
