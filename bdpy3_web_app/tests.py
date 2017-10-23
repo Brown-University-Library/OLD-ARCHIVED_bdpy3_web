@@ -10,30 +10,24 @@ log = logging.getLogger(__name__)
 SimpleTestCase.maxDiff = None
 
 
-## disables test because it would really submit a request
-# class Bdpy3LibTest( SimpleTestCase ):
-#     """ Checks call to bdpy3 library. """
+class Bdpy3LibTest( SimpleTestCase ):
+    """ Checks call to bdpy3 library. """
 
-#     def setUp(self):
-#         self.libcaller = LibCaller()
+    def setUp(self):
+        self.libcaller = LibCaller()
 
-#     def test_do_lookup( self):
-#         """ Checks good params. """
-#         params = { 'user_barcode': settings_app.TEST_PATRON_BARCODE, 'isbn': settings_app.TEST_ISBN }
-#         result = self.libcaller.do_lookup( params )
-#         self.assertEqual(
-#             dict,
-#             type(result) )
-#         self.assertEqual(
-#             ['Available', 'OrigNumberOfRecords', 'PickupLocation', 'RequestLink'],
-#             sorted(result.keys()) )
-#         self.assertEqual(
-#             'foo',
-#             result['Available'] )
-#         self.assertEqual(
-#             'foo',
-#             result['RequestLink']['RequestMessage'] )
-
+    def test_exact_search__not_found(self):
+        """ Checks exact-search on not-found. """
+        params = { 'user_barcode': settings_app.TEST_PATRON_BARCODE, 'isbn': settings_app.TEST_ISBN_NOT_FOUND }
+        result = self.libcaller.do_lookup( params )
+        self.assertEqual(
+            dict,
+            type(result)
+        )
+        self.assertEqual(
+            {'Problem': {'ErrorCode': 'PUBRI003', 'ErrorMessage': 'No result'}},
+            result
+        )
 
 class RootUrlTest( SimpleTestCase ):
     """ Checks root urls. """
