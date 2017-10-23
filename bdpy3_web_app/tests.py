@@ -64,7 +64,7 @@ class ClientTest_RequestBib( SimpleTestCase ):
         parameter_dict = {
             'api_authorization_code': settings_app.TEST_AUTH_CODE,
             'api_identity': settings_app.TEST_IDENTITY,
-            'user_barcode': settings_app.TEST_PATRON_BARCODE,
+            'patron_barcode': settings_app.TEST_PATRON_BARCODE,
             'title': 'Zen and the Art of Motorcycle Maintenance',
             'author': 'Robert M. Pirsig',
             'year': '1874'

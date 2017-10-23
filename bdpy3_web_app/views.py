@@ -3,6 +3,7 @@
 import datetime, json, logging, os, pprint
 from bdpy3_web_app import settings_app
 from bdpy3_web_app.lib.app_helper import Validator, LibCaller
+from bdpy3_web_app.lib.lib_caller import V2RequestBibCaller
 from bdpy3_web_app.lib.validator import V2RequestValidator
 from django.conf import settings
 from django.contrib.auth import logout
@@ -15,6 +16,7 @@ log = logging.getLogger(__name__)
 
 caller = LibCaller()
 v1_validator = Validator()
+v2_request_bib_caller = V2RequestBibCaller()
 v2_request_validator = V2RequestValidator()
 
 
@@ -43,8 +45,8 @@ def v2_bib_request( request ):
     if v2_request_validator.validate_bib_request( request.method, request.META.get('REMOTE_ADDR', ''), request.POST ) is False:
         log.info( 'request invalid, returning 400' )
         return HttpResponseBadRequest( '400 / Bad Request' )
-    result_data = v2_request_caller.request_bib( request.POST )
-    response_dct = v2_request_caller.make_response( result_data )
+    result_data = v2_request_bib_caller.request_bib( request.POST )
+    response_dct = v2_request_bib_caller.make_response( result_data )
     log.debug( 'returning response' )
     jsn = json.dumps( interpreted_response_dct, sort_keys=True, indent=2 )
     return HttpResponse( jsn, content_type='application/javascript; charset=utf-8' )

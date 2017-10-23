@@ -34,7 +34,7 @@ class V2RequestValidator( object ):
             Called by validate_request() """
         log.debug( 'params, ```%s```' % pprint.pformat(params) )
         keys_good = False
-        required_keys = [ 'api_authorization_code', 'api_identity', 'user_barcode', 'title', 'author', 'year' ]
+        required_keys = [ 'api_authorization_code', 'api_identity', 'patron_barcode', 'title', 'author', 'year' ]
         for required_key in required_keys:
             if required_key not in params.keys():
                 break
