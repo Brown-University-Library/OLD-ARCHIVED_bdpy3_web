@@ -56,6 +56,30 @@ class ClientTest_RequestExact( SimpleTestCase ):
         )
 
 
+class ClientTest_RequestBib( SimpleTestCase ):
+    """ Checks client exact-search on not-found. """
+
+    def test_v1_request_exact__not_found(self):
+        """ Checks '/v1/ post'. """
+        parameter_dict = {
+            'api_authorization_code': settings_app.TEST_AUTH_CODE,
+            'api_identity': settings_app.TEST_IDENTITY,
+            'user_barcode': settings_app.TEST_PATRON_BARCODE,
+            'title': 'Zen and the Art of Motorcycle Maintenance',
+            'author': 'Robert M. Pirsig',
+            'year': '1874'
+        }
+        response = self.client.post( '/v12/', parameter_dict )  # project root part of url is assumed
+        self.assertEqual( 200, response.status_code )
+        self.assertEqual( bytes, type(response.content) )
+        dct = json.loads( response.content )
+        log.debug( 'dct, ```%s```' % pprint.pformat(dct) )
+        self.assertEqual(
+            [ 'request', 'response' ],
+            sorted( dct.keys() )
+        )
+
+
 class RootUrlTest( SimpleTestCase ):
     """ Checks root urls. """
 
