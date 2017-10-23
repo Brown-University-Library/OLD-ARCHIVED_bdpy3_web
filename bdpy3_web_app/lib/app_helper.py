@@ -80,7 +80,7 @@ class LibCaller( object ):
             'PICKUP_LOCATION': settings_app.BDPY3_PICKUP_LOCATION,
             }
 
-    def do_lookup( self, params ):
+    def request_exact( self, params ):
         """ Runs lookup; returns bdpy3 output.
             Called by views.v1() """
         log.debug( 'params, ```%s```' % pprint.pformat(params) )

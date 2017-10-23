@@ -27,7 +27,7 @@ def v1( request ):
     if validator.validate_request( request.method, request.META.get('REMOTE_ADDR', ''), request.POST ) is False:
         log.info( 'request invalid, returning 400' )
         return HttpResponseBadRequest( '400 / Bad Request' )
-    result_data = caller.do_lookup( request.POST )
+    result_data = caller.request_exact( request.POST )
     interpreted_response_dct = caller.interpret_result( result_data )
     log.debug( 'returning response' )
     jsn = json.dumps( interpreted_response_dct, sort_keys=True, indent=2 )
