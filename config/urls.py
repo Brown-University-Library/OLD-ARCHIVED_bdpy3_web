@@ -17,6 +17,8 @@ urlpatterns = [
 
     url( r'^v1/$', views.v1, name='v1_url' ),
 
+    url( r'^v2/bib_request/$', views.v2_bib_request, name='v2_bib_request_url' ),
+
     url( r'^access_test/$', views.access_test, name='access_test_url' ),
 
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),

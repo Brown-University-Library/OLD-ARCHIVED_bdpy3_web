@@ -21,7 +21,7 @@ def info( request ):
 
 
 def v1( request ):
-    """ Handles post from easyborrow & returns json results. """
+    """ Handles v1 request-exact post from easyborrow & returns json results. """
     # log.debug( 'request, ```%s```' % pprint.pformat(request.__dict__) )
     log.debug( '\n\nstarting request...' )
     if validator.validate_request( request.method, request.META.get('REMOTE_ADDR', ''), request.POST ) is False:
@@ -32,6 +32,11 @@ def v1( request ):
     log.debug( 'returning response' )
     jsn = json.dumps( interpreted_response_dct, sort_keys=True, indent=2 )
     return HttpResponse( jsn, content_type='application/javascript; charset=utf-8' )
+
+
+def v2_bib_request( request ):
+    """ Handles v1 request-exact post from easyborrow & returns json results. """
+    return HttpResponse( 'coming')
 
 
 def access_test( request ):
