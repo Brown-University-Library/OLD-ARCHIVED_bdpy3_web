@@ -34,7 +34,7 @@ class ClientTest_RequestExact( SimpleTestCase ):
     """ Checks client exact-search on not-found. """
 
     def test_v1_request_exact__not_found(self):
-        """ Checks '/v1/ post'. """
+        """ Checks '/v1/ request-exact call'. """
         parameter_dict = {
             'api_authorization_code': settings_app.TEST_AUTH_CODE,
             'api_identity': settings_app.TEST_IDENTITY,
@@ -59,8 +59,8 @@ class ClientTest_RequestExact( SimpleTestCase ):
 class ClientTest_RequestBib( SimpleTestCase ):
     """ Checks client exact-search on not-found. """
 
-    def test_v1_request_exact__not_found(self):
-        """ Checks '/v1/ post'. """
+    def test_v2_request_bib__not_found(self):
+        """ Checks '/v2/ request-bib call'. """
         parameter_dict = {
             'api_authorization_code': settings_app.TEST_AUTH_CODE,
             'api_identity': settings_app.TEST_IDENTITY,
@@ -69,7 +69,7 @@ class ClientTest_RequestBib( SimpleTestCase ):
             'author': 'Robert M. Pirsig',
             'year': '1874'
         }
-        response = self.client.post( '/v12/', parameter_dict )  # project root part of url is assumed
+        response = self.client.post( '/v2/bib_request/', parameter_dict )  # project root part of url is assumed
         self.assertEqual( 200, response.status_code )
         self.assertEqual( bytes, type(response.content) )
         dct = json.loads( response.content )
