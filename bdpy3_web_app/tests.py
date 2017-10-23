@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging
+import json, logging, pprint
 from django.test import SimpleTestCase    ## TestCase requires db
 from bdpy3_web_app import settings_app
 from bdpy3_web_app.lib.app_helper import LibCaller
@@ -16,10 +16,10 @@ class Bdpy3LibTest( SimpleTestCase ):
     def setUp(self):
         self.libcaller = LibCaller()
 
-    def test_exact_search__not_found(self):
-        """ Checks exact-search on not-found. """
+    def test_request_exact_search__not_found(self):
+        """ Checks lib-caller exact-search on not-found. """
         params = { 'user_barcode': settings_app.TEST_PATRON_BARCODE, 'isbn': settings_app.TEST_ISBN_NOT_FOUND }
-        result = self.libcaller.do_lookup( params )
+        result = self.libcaller.request_exact( params )
         self.assertEqual(
             dict,
             type(result)
@@ -28,6 +28,33 @@ class Bdpy3LibTest( SimpleTestCase ):
             {'Problem': {'ErrorCode': 'PUBRI003', 'ErrorMessage': 'No result'}},
             result
         )
+
+
+class ClientTest_RequestExact( SimpleTestCase ):
+    """ Checks client exact-search on not-found. """
+
+    def test_v1_request_exact__not_found(self):
+        """ Checks '/v1/ post'. """
+        parameter_dict = {
+            'api_authorization_code': settings_app.TEST_AUTH_CODE,
+            'api_identity': settings_app.TEST_IDENTITY,
+            'isbn': settings_app.TEST_ISBN_NOT_FOUND,
+            'user_barcode': settings_app.TEST_PATRON_BARCODE
+        }
+        response = self.client.post( '/v1/', parameter_dict )  # project root part of url is assumed
+        self.assertEqual( 200, response.status_code )
+        self.assertEqual( bytes, type(response.content) )
+        dct = json.loads( response.content )
+        log.debug( 'dct, ```%s```' % pprint.pformat(dct) )
+        self.assertEqual( {
+            'bd_confirmation_code': None,
+            'found': False,
+            'requestable': False,
+            'search_result': 'FAILURE'
+            },
+            dct
+        )
+
 
 class RootUrlTest( SimpleTestCase ):
     """ Checks root urls. """
