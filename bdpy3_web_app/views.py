@@ -45,10 +45,9 @@ def v2_bib_request( request ):
     if v2_request_validator.validate_bib_request( request.method, request.META.get('REMOTE_ADDR', ''), request.POST ) is False:
         log.info( 'request invalid, returning 400' )
         return HttpResponseBadRequest( '400 / Bad Request' )
-    result_data = v2_request_bib_caller.request_bib( request.POST )
-    response_dct = v2_request_bib_caller.make_response( result_data )
+    result_dct = v2_request_bib_caller.request_bib( request.POST )
     log.debug( 'returning response' )
-    jsn = json.dumps( interpreted_response_dct, sort_keys=True, indent=2 )
+    jsn = json.dumps( result_dct, sort_keys=True, indent=2 )
     return HttpResponse( jsn, content_type='application/javascript; charset=utf-8' )
 
 

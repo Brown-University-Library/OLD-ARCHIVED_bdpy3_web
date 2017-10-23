@@ -20,30 +20,37 @@ class V2RequestBibCaller( object ):
             'PARTNERSHIP_ID': settings_app.BDPY3_PARTNERSHIP_ID,
             'PICKUP_LOCATION': settings_app.BDPY3_PICKUP_LOCATION,
             }
+        log.debug( 'self.defaults, ```%s```' % pprint.pformat(self.defaults) )
 
     def request_bib( self, params ):
-        """ Runs lookup; returns bdpy3 request-bib output.
+        """ Runs lookup; returns bdpy3 request-bib dct output.
             Called by views.v2_bib_request() """
         log.debug( 'params, ```%s```' % pprint.pformat(params) )
-        log.debug( 'self.defaults, ```%s```' % pprint.pformat(self.defaults) )
+        # log.debug( 'self.defaults, ```%s```' % pprint.pformat(self.defaults) )
+        start = datetime.datetime.now()
         bd = BorrowDirect( self.defaults )
-        bd.run_request_bib_item( params['patron_barcode'], params['title'], params['author'], params['year'] )
-        log.debug( 'bd.request_result, `%s`' % bd.request_result )
-        return bd.request_result
+        ( patron_barcode, title, author, year ) = ( params['patron_barcode'], params['title'], params['author'], params['year'] )
+        bd.run_request_bib_item( patron_barcode, title, [author], year )
+        log.debug( 'bd_api result, ```%s```' % pprint.pformat(bd.request_result) )
+        response_dct = self.prepare_response_dct( start, title, author, year, bd.request_result )
+        return response_dct
 
-    def interpret_result( self, bdpy3_result ):
-        """ Examines api result and prepares response expected by easyborrow controller.
-            Called by views.v1()
-            Note: at the moment, it does not appear that the new BD api distinguishes between 'found' and 'requestable'. """
-        return_dct = {
-            'search_result': 'FAILURE', 'bd_confirmation_code': None, 'found': False, 'requestable': False }
-        if 'RequestNumber' in bdpy3_result.keys():
-            return_dct['search_result'] = 'SUCCESS'
-            return_dct['bd_confirmation_code'] = bdpy3_result['RequestNumber']
-            return_dct['found'] = True
-            return_dct['requestable'] = True
-        log.debug( 'interpreted result-dct, `%s`' % pprint.pformat(return_dct) )
-        return return_dct
+    def prepare_response_dct( self, start, title, author, year, bd_api_result_dct ):
+        """ Formats response (which will be json).
+            Called by request_bib() """
+        resp_dct = {
+            'request': {
+                'datetime_request': str( start ),
+                'bib_query': { 'title': title, 'author': author, 'year': year }
+            },
+            'response': {
+                'datetime_response': str( datetime.datetime.now() ),
+                'bd_api_response': bd_api_result_dct,
+                'interpreted_response': 'coming'
+            }
+        }
+        log.debug( 'resp_dct, ```%s```' % pprint.pformat(resp_dct) )
+        return resp_dct
 
     ## end class LibCaller()
 
