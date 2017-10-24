@@ -22,19 +22,6 @@ class V2RequestBibCaller( object ):
             }
         log.debug( 'self.defaults, ```%s```' % pprint.pformat(self.defaults) )
 
-    # def request_bib( self, params ):
-    #     """ Runs lookup; returns bdpy3 request-bib dct output.
-    #         Called by views.v2_bib_request() """
-    #     log.debug( 'params, ```%s```' % pprint.pformat(params) )
-    #     start = datetime.datetime.now()
-    #     bd = BorrowDirect( self.defaults )
-    #     ( patron_barcode, title, author, year ) = ( params['patron_barcode'], params['title'], params['author'], params['year'] )
-    #     bd.run_request_bib_item( patron_barcode, title, [author], year )
-    #     log.debug( 'bd_api result, ```%s```' % pprint.pformat(bd.request_result) )
-    #     interpreted_response = self.interpret_response( bd.request_result )
-    #     response_dct = self.prepare_response_dct( start, title, author, year, bd.request_result, interpreted_response )
-    #     return response_dct
-
     def request_bib( self, patron_barcode, title, author, year ):
         """ Runs lookup; returns bdpy3 request-bib dct output.
             Called by views.v2_bib_request() """
@@ -50,8 +37,13 @@ class V2RequestBibCaller( object ):
     def interpret_response( self, bd_api_result_dct ):
         """ Prepares easyBorrow convenience response.
             Called by request_bib() """
+        interpreted_response = { 'result': None, 'bd_confirmation_code': None }
         if '''"ErrorMessage": "No result"''' in json.dumps( bd_api_result_dct ):
             interpreted_response = { 'result': 'not_found', 'bd_confirmation_code': None }
+        elif bd_api_result_dct.get( 'RequestNumber', None ):  # means request was successful
+            interpreted_response = { 'result': 'requested', 'bd_confirmation_code': bd_api_result_dct['RequestNumber'] }
+        elif '''"Internal error; This is a duplicate of a recent request. This request will not be submitted"''' in json.dumps( bd_api_result_dct ):
+            interpreted_response = { 'result': 'duplicate_request_not_rerequested', 'bd_confirmation_code': None }
         log.debug( 'interpreted_response, ```%s```' % interpreted_response )
         return interpreted_response
 
@@ -60,11 +52,11 @@ class V2RequestBibCaller( object ):
             Called by request_bib() """
         resp_dct = {
             'request': {
-                'datetime_request': str( start ),
+                'date_time': str( start ),
                 'bib_query': { 'title': title, 'author': author, 'year': year }
             },
             'response': {
-                'datetime_response': str( datetime.datetime.now() ),
+                'elapsed_time': str( datetime.datetime.now() - start ),
                 'bd_api_response': bd_api_result_dct,
                 'interpreted_response': interpreted_response_dct
             }

@@ -82,6 +82,8 @@ class ClientTest_RequestBib__not_found( SimpleTestCase ):
         )
 
 
+'''
+## disabled because this will really generate a request
 class ClientTest_RequestBib__found( SimpleTestCase ):
     """ Checks client bib-search on found item.
         NOTE: this will really attempt a request! """
@@ -92,7 +94,7 @@ class ClientTest_RequestBib__found( SimpleTestCase ):
             'api_authorization_code': settings_app.TEST_AUTH_CODE,
             'api_identity': settings_app.TEST_IDENTITY,
             'patron_barcode': settings_app.TEST_PATRON_BARCODE,
-            'title': 'Zen and the Art of Motorcycle Maintenance',
+            'title': 'Zen and the art of motorcycle maintenance - an inquiry into values',
             'author': 'Robert M. Pirsig',
             'year': '1974'
         }
@@ -105,6 +107,7 @@ class ClientTest_RequestBib__found( SimpleTestCase ):
             [ 'request', 'response' ],
             sorted( dct.keys() )
         )
+'''
 
 
 class RootUrlTest( SimpleTestCase ):
