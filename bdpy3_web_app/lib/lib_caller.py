@@ -22,13 +22,25 @@ class V2RequestBibCaller( object ):
             }
         log.debug( 'self.defaults, ```%s```' % pprint.pformat(self.defaults) )
 
-    def request_bib( self, params ):
+    # def request_bib( self, params ):
+    #     """ Runs lookup; returns bdpy3 request-bib dct output.
+    #         Called by views.v2_bib_request() """
+    #     log.debug( 'params, ```%s```' % pprint.pformat(params) )
+    #     start = datetime.datetime.now()
+    #     bd = BorrowDirect( self.defaults )
+    #     ( patron_barcode, title, author, year ) = ( params['patron_barcode'], params['title'], params['author'], params['year'] )
+    #     bd.run_request_bib_item( patron_barcode, title, [author], year )
+    #     log.debug( 'bd_api result, ```%s```' % pprint.pformat(bd.request_result) )
+    #     interpreted_response = self.interpret_response( bd.request_result )
+    #     response_dct = self.prepare_response_dct( start, title, author, year, bd.request_result, interpreted_response )
+    #     return response_dct
+
+    def request_bib( self, patron_barcode, title, author, year ):
         """ Runs lookup; returns bdpy3 request-bib dct output.
             Called by views.v2_bib_request() """
-        log.debug( 'params, ```%s```' % pprint.pformat(params) )
+        log.debug( 'patron_barcode, `%s`; title, `%s`; author, `%s`; year, `%s`' % (patron_barcode, title, author, year)  )
         start = datetime.datetime.now()
         bd = BorrowDirect( self.defaults )
-        ( patron_barcode, title, author, year ) = ( params['patron_barcode'], params['title'], params['author'], params['year'] )
         bd.run_request_bib_item( patron_barcode, title, [author], year )
         log.debug( 'bd_api result, ```%s```' % pprint.pformat(bd.request_result) )
         interpreted_response = self.interpret_response( bd.request_result )
