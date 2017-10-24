@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 SimpleTestCase.maxDiff = None
 
 
-class Bdpy3LibTest( SimpleTestCase ):
+class Bdpy3LibTest_RequestExact( SimpleTestCase ):
     """ Checks call to bdpy3 library. """
 
     def setUp(self):
@@ -34,7 +34,8 @@ class ClientTest_RequestExact( SimpleTestCase ):
     """ Checks client exact-search on not-found. """
 
     def test_v1_request_exact__not_found(self):
-        """ Checks '/v1/ request-exact call'. """
+        """ Checks '/v1/ request-exact call'.
+            NOTE: this will really attempt a request! """
         parameter_dict = {
             'api_authorization_code': settings_app.TEST_AUTH_CODE,
             'api_identity': settings_app.TEST_IDENTITY,
@@ -56,11 +57,12 @@ class ClientTest_RequestExact( SimpleTestCase ):
         )
 
 
-class ClientTest_RequestBib( SimpleTestCase ):
-    """ Checks client exact-search on not-found. """
+class ClientTest_RequestBib__not_found( SimpleTestCase ):
+    """ Checks client bib-search on not-found.
+        NOTE: this will really attempt a request! """
 
     def test_v2_request_bib__not_found(self):
-        """ Checks '/v2/ request-bib call'. """
+        """ Checks '/v2/ request-bib call for not-found item'. """
         parameter_dict = {
             'api_authorization_code': settings_app.TEST_AUTH_CODE,
             'api_identity': settings_app.TEST_IDENTITY,
@@ -68,6 +70,31 @@ class ClientTest_RequestBib( SimpleTestCase ):
             'title': 'Zen and the Art of Motorcycle Maintenance',
             'author': 'Robert M. Pirsig',
             'year': '1874'
+        }
+        response = self.client.post( '/v2/bib_request/', parameter_dict )  # project root part of url is assumed
+        self.assertEqual( 200, response.status_code )
+        self.assertEqual( bytes, type(response.content) )
+        dct = json.loads( response.content )
+        log.debug( 'dct, ```%s```' % pprint.pformat(dct) )
+        self.assertEqual(
+            [ 'request', 'response' ],
+            sorted( dct.keys() )
+        )
+
+
+class ClientTest_RequestBib__found( SimpleTestCase ):
+    """ Checks client bib-search on found item.
+        NOTE: this will really attempt a request! """
+
+    def test_v2_request_bib__not_found(self):
+        """ Checks '/v2/ request-bib call for found item'. """
+        parameter_dict = {
+            'api_authorization_code': settings_app.TEST_AUTH_CODE,
+            'api_identity': settings_app.TEST_IDENTITY,
+            'patron_barcode': settings_app.TEST_PATRON_BARCODE,
+            'title': 'Zen and the Art of Motorcycle Maintenance',
+            'author': 'Robert M. Pirsig',
+            'year': '1974'
         }
         response = self.client.post( '/v2/bib_request/', parameter_dict )  # project root part of url is assumed
         self.assertEqual( 200, response.status_code )
