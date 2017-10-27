@@ -1,16 +1,13 @@
-## Under Development
-
-
 ### about
 
 bdpy3_web is a lightweight python3 [django](https://www.djangoproject.com) wrapper around [bdpy3](https://github.com/birkin/bdpy3), a python3 library for the [BorrowDirect](http://www.borrowdirect.org) api.
 
 ('Lightweight' meaning no database, no sessions, no templates, no static-files.)
 
-It and the underlying library are about to replace an [older deprecated code](https://github.com/Brown-University-Library/bdpyweb_code) in production.
+It and the underlying library have replaced [older deprecated code](https://github.com/Brown-University-Library/bdpyweb_code) in production.
 
 
-### usage api-v1 for exact-item request
+### usage -- api-v1 for exact-item request
 
 sample script...
 
@@ -51,7 +48,7 @@ sample script...
     # }
 
 
-### usage api-v2 for bib-item request
+### usage -- api-v2 for bib-item request
 
 sample script...
 
@@ -125,9 +122,7 @@ sample script...
     # }
 
 
-
-
-#### notes
+### notes
 
 - code contact: birkin_diana@brown.edu
 
