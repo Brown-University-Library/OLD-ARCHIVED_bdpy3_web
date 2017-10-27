@@ -64,4 +64,4 @@ class V2RequestValidator( object ):
         log.debug( 'validity, `%s`' % validity )
         return validity
 
-    ## end class Validator()
+    ## end class V2RequestValidator()

@@ -16,18 +16,6 @@ class Validator( object ):
         log.debug( 'helper initialized' )
         pass
 
-    # def validate_request( self, method, ip, post_params ):
-    #     """ Checks request validity; returns boolean.
-    #         Called by views.v1() """
-    #     log.debug( 'method, `%s`' % method )
-    #     validity = False
-    #     if self.check_keys( post_params ) is True:
-    #         if self.check_ip( ip ) is True:
-    #             if self.check_auth( post_params ) is True:
-    #                 validity = True
-    #     log.debug( 'overall_validity, `%s`' % validity )
-    #     return validity
-
     def validate_request( self, method, ip, post_params ):
         """ Checks request validity; returns boolean.
             Called by views.v1() """
