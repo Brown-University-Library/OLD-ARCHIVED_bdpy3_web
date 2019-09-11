@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import datetime, json, logging, os, pprint
+
 from bdpy3_web_app import settings_app
+from bdpy3_web_app.lib import version_helper
 from bdpy3_web_app.lib.app_helper import Validator, LibCaller
 from bdpy3_web_app.lib.lib_caller import V2RequestBibCaller
 from bdpy3_web_app.lib.validator import V2RequestValidator
@@ -81,4 +83,3 @@ def error_check( request ):
         1/0
     else:
         return HttpResponseNotFound( '<div>404 / Not Found</div>' )
-
