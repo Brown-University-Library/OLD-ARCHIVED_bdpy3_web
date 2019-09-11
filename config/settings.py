@@ -121,6 +121,7 @@ USE_TZ = True
 
 
 # Email
+SERVER_EMAIL = 'bdpy3_api@library.brown.edu'
 EMAIL_HOST = os.environ['BDPY3WEB__EMAIL_HOST']
 EMAIL_PORT = int( os.environ['BDPY3WEB__EMAIL_PORT'] )
 
@@ -161,12 +162,22 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        }
     },
     'loggers': {
         'bdpy3_web_app': {
             'handlers': ['logfile', 'console'],
             'level': os.environ.get(u'BDPY3WEB__LOG_LEVEL'),
             'propagate': True
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
         },
     }
 }
