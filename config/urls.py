@@ -19,6 +19,7 @@ urlpatterns = [
 
     ## support urls...
     url( r'^access_test/$', views.access_test, name='access_test_url' ),
+    url( r'^error_check/$', views.error_check, name='error_check_url' ),
     url( r'^version/$', views.version, name='version_url' ),
 
     url( r'^$',  RedirectView.as_view(pattern_name='info_url') ),

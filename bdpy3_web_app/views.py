@@ -79,7 +79,7 @@ def version( request ):
 
 def error_check( request ):
     """ For checking that admins receive error-emails. """
-    if project_settings.DEBUG == True:
+    if settings.DEBUG == True:
         1/0
     else:
         return HttpResponseNotFound( '<div>404 / Not Found</div>' )
