@@ -8,7 +8,7 @@ from bdpy3_web_app.lib.validator import V2RequestValidator
 from django.conf import settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, render
 
 
@@ -54,6 +54,31 @@ def v2_bib_request( request ):
 
 def access_test( request ):
     """ Returns simplest response. """
-    log.debug( 'request, ```%s```' % pprint.pformat(request.__dict__) )
+    log.debug( f'\n\n\nstarting access_test; request, ```{request.__dict__}```' )
     now = datetime.datetime.now()
     return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
+
+
+# ===========================
+# for development convenience
+# ===========================
+
+
+def version( request ):
+    """ Returns basic branch and commit data. """
+    rq_now = datetime.datetime.now()
+    commit = version_helper.get_commit()
+    branch = version_helper.get_branch()
+    info_txt = commit.replace( 'commit', branch )
+    context = version_helper.make_context( request, rq_now, info_txt )
+    output = json.dumps( context, sort_keys=True, indent=2 )
+    return HttpResponse( output, content_type='application/json; charset=utf-8' )
+
+
+def error_check( request ):
+    """ For checking that admins receive error-emails. """
+    if project_settings.DEBUG == True:
+        1/0
+    else:
+        return HttpResponseNotFound( '<div>404 / Not Found</div>' )
+
