@@ -150,7 +150,7 @@ class FormHelper( object ):
         """ Hits hit_availability_api for holdings data.
             Called by bdpyweb_app.handle_form_post() """
         url = '%s/%s/' % ( self.defaults['AVAILABILITY_API_URL_ROOT'], isbn )
-        r = requests.get( url )
+        r = requests.get( url, timeout=30 )
         dct = r.json()
         items = dct['items']
         for item in items:
